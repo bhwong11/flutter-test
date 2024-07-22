@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/components/signup.dart';
+import 'package:flutter_application_1/components/signin.dart';
+import 'package:flutter_application_1/providers/AuthProvider.dart';
 
 final pb = PocketBase('http://127.0.0.1:8090');
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => IsLoggedInProvider()),
+      ],
+      child: const MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -154,10 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
+            const SignUp(),
+            const SignIn(),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Text('Is signed in? ${pb.authStore.isValid}'),
+            Text('Counter state ${context.read<IsLoggedInProvider>().count}'),
             Text(
               _word,
               style: Theme.of(context).textTheme.headlineMedium,
@@ -167,7 +182,11 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 FloatingActionButton(
-                  onPressed: _incrementCounter,
+                  onPressed: () {
+                    int currentCount = context.read<IsLoggedInProvider>().count;
+                    context.read<IsLoggedInProvider>().incrementCount(currentCount+2);
+                    _incrementCounter();
+                  },
                   tooltip: 'Increment',
                   child: const Icon(Icons.add),
                 ), // This trailing comma makes auto-formatting nicer for build methods.

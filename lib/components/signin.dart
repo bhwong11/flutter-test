@@ -12,28 +12,12 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   String _username = '';
-  String _email = '';
   String _password = '';
-  String _confirmPassword = '';
-  String _name = '';
-
-  Future<void> _signUp() async {
-    final body = <String, dynamic>{
-      "username": _username,
-      "email": _email,
-      "password": _password,
-      "passwordConfirm": _confirmPassword,
-      "name": _name
-    };
-
-    final record = await pb.collection('users').create(body: body);
-    print(record);
-  }
 
   Future<void> _signIn() async {
     final authData = await pb
         .collection('users')
-        .authWithPassword('bob@example.com', '12345678');
+        .authWithPassword(_username, _password);
     print(authData);
   }
 
@@ -43,75 +27,66 @@ class _SignInState extends State<SignIn> {
     });
   }
 
+  void _setPassword(newText) {
+    setState(() {
+      _password = newText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
+        child: Container(
+          child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Text('Sign In'),
                 Padding(
                     padding: const EdgeInsets.all(0.0),
                     child: TextField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter a search term',
+                      hintText: 'Enter username',
                     ),
                     onChanged: (text) {
-                      print('First text field: $text (${text.characters.length})');
-                      _addAToWord(text);
+                      _setUsername(text);
+                      print('First username field: $text');
                     },
+                  )
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your password',
+                    ),
+                    onChanged: (text) {
+                      _setPassword(text);
+                      print('First password field: $text');
+                    },
+                  )
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: ElevatedButton(
+                    child: Text(
+                      "Sign In".toUpperCase(),
+                      style: TextStyle(fontSize: 14)
+                    ),
+                    onPressed: () => {
+                      _signIn()
+                    }
                   )
                 ),
               ]
             )
-          ],
         ),
       ),
-      // floatingActionButton: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   crossAxisAlignment: CrossAxisAlignment.end,
-      //   children: <Widget>[
-      //     FloatingActionButton(
-      //       onPressed: _incrementCounter,
-      //       tooltip: 'Increment',
-      //       child: const Icon(Icons.add),
-      //     ), // This trailing comma makes auto-formatting nicer for build methods.
-      //      Padding(
-      //         padding: const EdgeInsets.all(0.0),
-      //         child: TextField(
-      //         decoration: const InputDecoration(
-      //           border: OutlineInputBorder(),
-      //           hintText: 'Enter a search term',
-      //         ),
-      //         onChanged: (text) {
-      //           print('First text field: $text (${text.characters.length})');
-      //           _addAToWord(text);
-      //         },
-      //       )
-      //     ),
-      //   ]
-      // )
     );
   }
 }
