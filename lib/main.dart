@@ -4,10 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/components/signup.dart';
 import 'package:flutter_application_1/components/signin.dart';
 import 'package:flutter_application_1/providers/AuthProvider.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final pb = PocketBase('http://127.0.0.1:8090');
 
-void main() {
+void main() async {
+  try{
+    await Supabase.initialize(
+      url: dotenv.get('SUPABASE_URL'),
+      anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+    );
+  }catch(e){
+    print('error $e');
+  }
+
   runApp(
     MultiProvider(
       providers: [
