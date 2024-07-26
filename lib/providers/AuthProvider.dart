@@ -5,14 +5,15 @@ class IsLoggedInProvider extends ChangeNotifier {
 
   bool get isLoggedIn => _isLoggedIn;
 
-  set setIsLoggedIn (bool newIsLoggedIn) {
-    _isLoggedIn = newIsLoggedIn;
-    notifyListeners();
-  }
 
   int _count = 0;
 
   int get count => _count;
+
+  set setIsLoggedIn (bool newIsLoggedIn) {
+    _isLoggedIn = newIsLoggedIn;
+    notifyListeners();
+  }
 
   void incrementCount (int newCount) {
     _count = newCount;
